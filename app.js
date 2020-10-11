@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var app = express();
 
 //Cargar archivos de rutas
-
+var user_routes = require('./routes/user');
 
 //Middlewares
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -18,26 +18,7 @@ app.use(bodyParser.json());
 
 
 //Reescribir rutas
-
-//Ruta/metodo de prueba
-app.get('/prueba', (req, res) => {
-    return res.status(200).send("<h1>Hola mundo soy el backend</h1>");
-    /*
-    return res.status(200).send({
-        nombre: 'Victor Robles',
-        message: 'Hola mundo desde el back-end con Node'
-    });
-    */
-});
-
-app.post('/prueba', (req, res) => {
-    
-    return res.status(200).send({
-        nombre: 'Victor Robles',
-        message: 'Hola mundo desde el back-end con Node soy un metodo POST'
-    });
-    
-});
+app.use('/api', user_routes);
 
 //Exportar modulo
 module.exports = app;

@@ -195,6 +195,30 @@ var controller = {
                     return res.status(200).send({
                         message: 'El email ya existe, escoge otro.'
                     });
+                } else {
+                    // Buscar y actualizar documento
+                    User.findOneAndUpdate({ _id: userId }, params, { new: true }, (err, userUpdated) => {
+
+                        if (err) {
+                            return res.status(500).send({
+                                status: 'error',
+                                message: 'Error al actualizar usuario'
+                            });
+                        }
+
+                        if (!userUpdated) {
+                            return res.status(200).send({
+                                status: 'error',
+                                message: 'No se ha actualizado el usuario'
+                            });
+                        }
+
+                        // Devolver respuesta
+                        return res.status(200).send({
+                            status: "success",
+                            user: userUpdated
+                        });
+                    });
                 }
             });
         } else {
@@ -286,6 +310,52 @@ var controller = {
             });
         }
     },
+
+    avatar: (req, res) => {
+        var fileName = req.params.fileName;
+        var pathFile = './uploads/users/' + fileName;
+        fs.exists(pathFile, (exists) => {
+            if (exists) {
+                return res.sendFile(path.resolve(pathFile));
+            } else {
+                return res.status(404).send({
+                    message: 'La imagen no existe.'
+                });
+            }
+        });
+    },
+
+    getUsers: (req, res) => {
+        User.find().exec((err, users) => {
+            if (err || !users) {
+                return res.status(404).send({
+                    status: 'error',
+                    message: 'No hay usuarios que mostrar.'
+                });
+            }
+            return res.status(200).send({
+                status: 'success',
+                users
+            });
+        });
+    },
+
+    getUser: (req, res) => {
+        var userId = req.params.userId;
+
+        User.findById(userId).exec((err, user) => {
+            if (err || !user) {
+                return res.status(404).send({
+                    status: 'error',
+                    message: 'No existe el usuario.'
+                });
+            }
+            return res.status(200).send({
+                status: 'success',
+                user
+            });
+        });
+    }
 };
 
 module.exports = controller;

@@ -44,7 +44,6 @@ var controller = {
             user.surname = params.surname;
             user.email = params.email.toLowerCase();
             user.role = 'ROLE_USER';
-            user.image = null;
 
             //Comprobar si el usuario existe
             User.findOne({ email: user.email }, (err, issetUser) => {
@@ -249,16 +248,16 @@ var controller = {
 
     },
 
-    uploadAvatar: (req, res) => {
+    uploadAvatar: function(req, res) {
         // Configurar el modulo multiparty (md) routes/user.js
 
         // Recoger el fichero de la peticion
-        var file_name = 'Avatar no subido...';
+        //var file_name = 'Avatar no subido...';
 
         if (!req.files) {
             return res.status(404).send({
                 status: 'error',
-                message: file_name
+                message: 'Avatar no subido...'
             });
         }
 
@@ -282,7 +281,7 @@ var controller = {
 
                 return res.status(200).send({
                     status: 'error',
-                    message: 'La extension del archivo no es válida'
+                    message: 'La extensión del archivo no es válida.'
                 });
 
             });

@@ -261,36 +261,38 @@ var controller = {
 
         // Find or
         Topic.find({
-            "$or": [
-                { "title": { "$regex": searchString, "$options": "i" } },
-                { "content": { "$regex": searchString, "$options": "i" } },
-                { "code": { "$regex": searchString, "$options": "i" } },
-                { "lang": { "$regex": searchString, "$options": "i" } }
-            ]
-        }).sort([
-            ['date', 'descending']
-        ]).exec((err, topics) => {
+                "$or": [
+                    { "title": { "$regex": searchString, "$options": "i" } },
+                    { "content": { "$regex": searchString, "$options": "i" } },
+                    { "code": { "$regex": searchString, "$options": "i" } },
+                    { "lang": { "$regex": searchString, "$options": "i" } }
+                ]
+            }).populate('user')
+            .sort([
+                ['date', 'descending']
+            ])
+            .exec((err, topics) => {
 
-            if (err) {
-                return res.status(500).send({
-                    status: 'error',
-                    message: 'Error en la peticion.'
+                if (err) {
+                    return res.status(500).send({
+                        status: 'error',
+                        message: 'Error en la peticion.'
+                    });
+                }
+
+                if (!topics) {
+                    return res.status(404).send({
+                        status: 'error',
+                        message: 'No hay temas disponibles.'
+                    });
+                }
+
+                // Devolver respuesta
+                return res.status(200).send({
+                    status: 'success',
+                    topics
                 });
-            }
-
-            if (!topics) {
-                return res.status(404).send({
-                    status: 'error',
-                    message: 'No hay temas disponibles.'
-                });
-            }
-
-            // Devolver respuesta
-            return res.status(200).send({
-                status: 'success',
-                topics
             });
-        });
 
 
     }

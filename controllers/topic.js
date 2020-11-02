@@ -114,7 +114,9 @@ var controller = {
         // Find con una condicion de usuario
         Topic.find({
             user: userId
-        }).sort([['date', 'descending']]).exec((err, topics) => {
+        }).sort([
+            ['date', 'descending']
+        ]).exec((err, topics) => {
             if (err) {
                 return res.status(500).send({
                     status: 'error',
@@ -265,7 +267,9 @@ var controller = {
                 { "code": { "$regex": searchString, "$options": "i" } },
                 { "lang": { "$regex": searchString, "$options": "i" } }
             ]
-        }).sort([['date', 'descending']]).exec((err, topic) => {
+        }).sort([
+            ['date', 'descending']
+        ]).exec((err, topics) => {
 
             if (err) {
                 return res.status(500).send({
@@ -274,7 +278,7 @@ var controller = {
                 });
             }
 
-            if (!topic) {
+            if (!topics) {
                 return res.status(404).send({
                     status: 'error',
                     message: 'No hay temas disponibles.'
@@ -284,7 +288,7 @@ var controller = {
             // Devolver respuesta
             return res.status(200).send({
                 status: 'success',
-                topic
+                topics
             });
         });
 
